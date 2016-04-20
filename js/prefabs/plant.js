@@ -11,7 +11,7 @@ Veggies.Plant = function(state, x, y, data) {
 
 	this.anchor.setTo(0.5);
 	this.game.physics.arcade.enable(this);
-	this.body.inmovable = true;
+	this.body.immovable = true;
 
 	this.reset(x, y, data);
 

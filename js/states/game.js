@@ -4,6 +4,8 @@ Veggies.GameState = {
 	init: function(currentLevel) {
 		this.currentLevel = currentLevel ? currentLevel : 'level1';
 
+		this.HOUSE_X = 60;
+
 		this.game.physics.arcade.gravity.y = 0;
 	},
 	create: function() {
@@ -35,10 +37,46 @@ Veggies.GameState = {
 
 	},
 	update: function() {
+		this.game.physics.arcade.collide(this.plants, this.zombies, this.attackPlant, null, this);
 
+		this.zombies.forEachAlive(function(zombie){
+			zombie.body.velocity.x = zombie.defaultVelocity;
+
+			//Game Over if Zobmie reached House
+			if(zombie.x <= this.HOUSE_X) {
+				this.gameOver();
+			}
+		}, this);
 	},
 	gameOver: function() {
 		this.game.state.start('Game');
+	}, 
+	attackPlant: function(plant, zombie) {
+		plant.damage(zombie.attack);
+	},
+	createZombie: function(x, y, data) {
+		//look for dead element
+		var newElement = this.zombies.getFirstDead();
+
+		if(!newElement) {
+			newElement = new Veggies.Zombie(this, x, y, data);
+			this.zombies.add(newElement);
+		} else {
+			newElement.reset(x, y, data);		
+		}
+		return newElement;
+	},
+	createPlant: function(x, y, data) {
+		//look for dead element
+		var newElement = this.plants.getFirstDead();
+		
+		if(!newElement) {
+			newElement = new Veggies.Plant(this, x, y, data);
+			this.plants.add(newElement);
+		} else {
+			newElement.reset(x, y, data);		
+		}
+		return newElement;
 	}
 
 };
