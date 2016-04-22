@@ -16,6 +16,11 @@ Veggies.GameState = {
 		this.zombies = this.add.group();
 		this.suns = this.add.group();
 
+		this.numSuns = 100;
+
+		//create user interface
+		this.createGui();
+
 		var zombieData = {
 			asset: 'zombie',
 			healther: 10,
@@ -29,11 +34,20 @@ Veggies.GameState = {
 
 		var plantData = {
 			plantAsset: 'plant',
-			health: 10
+			health: 10,
+			isShooter: true,
+			animationFrames: [1, 2, 1, 0]
 		}
+
+		this.sun = new Veggies.Sun(this, 200, 100);
+		this.suns.add(this.sun);
 
 		this.plant = new Veggies.Plant(this, 100, 100, plantData);
 		this.plants.add(this.plant);
+
+		// this.bullet = new Veggies.Bullet(this, 100, 200);
+		// this.bullets.add(this.bullet);
+
 
 	},
 	update: function() {
@@ -77,6 +91,22 @@ Veggies.GameState = {
 			newElement.reset(x, y, data);		
 		}
 		return newElement;
+	},
+	createGui: function() {
+		//show sun stats
+		var sun = this.add.sprite(10, this.game.height - 20, 'sun');
+		sun.anchor.setTo(0.5);
+		sun.scale.setTo(0.5);
+		var style = {font: '14px Arial', fill: '#fff'};
+		this.sunLabel = this.add.text(22, this.game.height - 28, '', style);
+		this.updateStats();
+	},
+	updateStats: function() {
+		this.sunLabel.text = this.numSuns;
+	},
+	increaseSun: function(amount) {
+		this.numSuns += amount;
+		this.updateStats();
 	}
 
 };
